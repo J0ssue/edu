@@ -26,6 +26,10 @@ export class UsersService {
    * @param id: number
    */
   findOne(id: number): Promise<User | null> {
+    if (!id) {
+      return Promise.resolve(null);
+    }
+
     return this.repo.findOne({
       where: { id },
     });
