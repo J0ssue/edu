@@ -43,12 +43,15 @@ export class UsersController {
   // }
   @Get('/whoami')
   @UseGuards(AuthGuard)
-  whoAmI(@CurrentUser() user: User) {
+  whoAmI(@CurrentUser() user: User): User {
     return user;
   }
 
   @Post('/signup')
-  async createUser(@Body() body: CreateUserDto, @Session() session: any) {
+  async createUser(
+    @Body() body: CreateUserDto,
+    @Session() session: any,
+  ): Promise<User> {
     const user = await this.authService.signup(body.email, body.password);
     session.userId = user.id;
 
@@ -56,7 +59,10 @@ export class UsersController {
   }
 
   @Post('/signin')
-  async signin(@Body() body: CreateUserDto, @Session() session: any) {
+  async signin(
+    @Body() body: CreateUserDto,
+    @Session() session: any,
+  ): Promise<User> {
     const user = await this.authService.signin(body.email, body.password);
     session.userId = user.id;
 
@@ -64,7 +70,7 @@ export class UsersController {
   }
 
   @Post('/signout')
-  signout(@Session() session: any) {
+  signout(@Session() session: any): void {
     session.userId = null;
   }
 
@@ -72,7 +78,7 @@ export class UsersController {
   // @UseInterceptors(new SerializeInterceptor(UserDto))
   // @Serialize(UserDto)
   @Get('/:id')
-  async findUser(@Param('id') id: string) {
+  async findUser(@Param('id') id: string): Promise<User> {
     const user = await this.userService.findOne(parseInt(id));
 
     if (!user) {
@@ -83,17 +89,20 @@ export class UsersController {
   }
 
   @Get()
-  findAllUsers(@Query('email') email: string) {
+  findAllUsers(@Query('email') email: string): Promise<User[]> {
     return this.userService.find(email);
   }
 
   @Delete('/:id')
-  removeUser(@Param('id') id: string) {
+  removeUser(@Param('id') id: string): Promise<User> {
     return this.userService.remove(parseInt(id));
   }
 
   @Patch('/:id')
-  updateUser(@Param('id') id: string, @Body() body: UpdateUserDto) {
+  updateUser(
+    @Param('id') id: string,
+    @Body() body: UpdateUserDto,
+  ): Promise<User> {
     return this.userService.update(parseInt(id), body);
   }
 }
