@@ -23,15 +23,34 @@ describe('Authentication System (e2e)', () => {
       .post('/auth/signup')
       .send({ email: mainEmail, password: '2' });
 
-    console.log('Status:', res.status);
-    console.log('Response body:', res.body);
-
     expect(res.status).toBe(201);
 
     const { email, id } = res.body;
 
     expect(id).toBeDefined();
     expect(email).toEqual(mainEmail);
+  });
+
+  it('signup as new user then get the currently logged in user', async () => {
+    const email = 'asdf@ass.com';
+
+    const res = await request(app.getHttpServer())
+      .post('/auth/signup')
+      .send({ email, password: '1' })
+      .expect(201);
+
+    const cookie = res.get('Set-Cookie');
+
+    if (!cookie) {
+      return;
+    }
+
+    const { body } = await request(app.getHttpServer())
+      .get('/auth/whoami')
+      .set('Cookie', cookie)
+      .expect(200);
+
+    expect(body.email).toEqual(email + 'kkk');
   });
 
   afterEach(async () => {

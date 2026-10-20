@@ -19,7 +19,7 @@
     "test:watch": "cross-env NODE_ENV=test vitest",
     "test:cov": "cross-env NODE_ENV=test vitest run --coverage",
     "test:debug": "cross-env NODE_ENV=test vitest --inspect-brk --no-file-parallelism",
-    "test:e2e": "cross-env NODE_ENV=test vitest run --config ./vitest.config.e2e.ts"
+    "test:e2e": "cross-env NODE_ENV=test vitest run --config ./vitest.config.e2e.ts --maxWorkers=1"
   },
   "dependencies": {
     "@nestjs/common": "^12.0.1",
