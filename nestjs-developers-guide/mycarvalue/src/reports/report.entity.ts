@@ -1,9 +1,14 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
+import { User } from '../users/user.entity.js';
+import type { Relation } from 'typeorm';
 
 @Entity()
 export class Report {
   @PrimaryGeneratedColumn()
   id: number;
+
+  @Column({ default: false })
+  approved: boolean;
 
   @Column()
   price: number;
@@ -25,4 +30,7 @@ export class Report {
 
   @Column()
   mileage: number;
+
+  @ManyToOne(() => User, (user) => user.reports)
+  user: Relation<User>;
 }

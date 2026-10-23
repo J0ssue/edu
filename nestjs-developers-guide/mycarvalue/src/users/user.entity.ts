@@ -6,7 +6,10 @@ import {
   Column,
   Entity,
   PrimaryGeneratedColumn,
+  OneToMany,
 } from 'typeorm';
+import type { Relation } from 'typeorm';
+import { Report } from '../reports/report.entity.js';
 
 @Entity()
 export class User {
@@ -34,4 +37,10 @@ export class User {
   logRemove() {
     console.log('Removed User with id: ', this.id);
   }
+
+  @Column({ default: true })
+  admin: boolean;
+
+  @OneToMany(() => Report, (report) => report.user)
+  reports: Relation<Report[]>;
 }
